@@ -1,0 +1,63 @@
+for testing in 2010.1017 run ./clustalw-align5.pl.cgi 
+
+or 
+http://165.140.60.9/~hoti1/cgi-bin/clustalw-align5.pl.cgi
+
+as of 2010.1220 not sure if web page works.
+current test method is from CLI:
+date ; ./clustalw-align5.pl.cgi > clustalw-align5.html ; date
+it produce html output to a file in 
+file://///phusem-s6000/unixhome/hoti1.emc/tmp/mut/mut_clustalw_out.html
+~hoti1/tmp/mut/mut_clustalw_out.html
+
+--
+
+orthologList.pm  ... 
+probably done for orthologList...
+
+executeClustalw() largely done
+
+NEXT:
+v- review clustaw to get primary seq out first
+   this affect alignment highlght/tag as seq may have front offset!
+ - review that mutation.pm can provide as way out output...  
+~- algorithm for printAlignment()
+~- add the necessary fn to mutation.pm	[probably okay now]
+
+
+v- retrieveGeneSeq()  use geneid
+  worry about not being able to find it our db check code?
+  at least make sure human is findable and use oracle!
+  x- may need additional db query to get accession number, maybe update ncbi_get
+
+
+v- printAlignment... to do block of 50 AA only at a time...
+
+- counter line
+- frequency coloring
+- fasta name/desc line ... to show up nicer in legend
+
+tin 2011.0109
+
+
+
+
+
+ref:
+
+clustalw in bioperl...
+Title       : OUTPUT
+ Description : (optional) clustalw supports GCG or PHYLIP or PIR or
+                Clustal format.  See the Bio::AlignIO modules for
+                which formats are supported by bioperl.
+
+also see Bio::SimpleAlign
+
+
+~~
+
+apparently i was using the splunk server to get to web pages on my home dir
+
+
+http://phusem-splunk/~hoti1/sci/bioinfo/clustalw-align5.html
+http://phusem-splunk/~hoti1/sci/bioinfo/mut_clustalw_out.html
