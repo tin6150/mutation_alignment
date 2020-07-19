@@ -1,0 +1,1315 @@
+Content-type: text/html
+
+<HTML>
+<H2>Alignment and Mutation Display (ver 0.5b)</H2>
+<HR>
+  <!--_DBG1_ Test dbg object.  This print only when debug level is set to > 0 -->
+   <!--_TRC_ alignmentAndMutation.pm new completed -->
+   <!--_TRC_ displayAlignAndMutation begins
+ -->
+   <!--_TRC_ mutationList.pm->new() ends -->
+   <!--_TRC_ Successfully created mutationList with dbgLevel= 8
+ -->
+   <!--_TRC_ In generateMutationList. -->
+  <!--_DBG1_ query is: gene_name=braf -->
+   <!--_TRC_ Calling dbQuery_mutList (largely Karen's gadsp_ky.pl).  Web output may disapear... -->
+   <!--_TRC_ dbQuery_mutList begins -->
+   <!--_TRC_ dbQuery connects db next... -->
+   <!--_TRC_ dbQuery connects ok -->
+   <!--_TRC_ dbQuery about to do eval -->
+  <!--_DBG1_ Execution of stored procedure returned:
+
+ Select distinct gene_name
+                , varianttype
+                , aa_var_start
+                , aa_var_stop
+                , sum(mutflag) over (partition by varianttype, aa_var_start, aa_var_stop
+                    order by varianttype, aa_var_start, aa_var_stop) mutsamplecnt
+                , count(distinct mutflag||cleanname) over () As samplecnt
+From (  select * from (
+           select distinct gene_name
+                    , cleanname
+                    , sampletype
+                    , varianttype
+                    , aa_var_start
+                    , aa_var_stop
+                    , first_value(mutflag) over (partition by cleanname
+                       ORDER BY cleanname, mutflag desc, sampleid) mutflag
+             From (
+                   select 'COSMIC' sourcedb
+                      , lower(locusname) gene_name
+                      , cleanname
+                      , sampletype
+                      , NVL(lower(varianttype),'wildtype') As varianttype
+                      , aa_var_start
+                      , aa_var_stop
+                      , sampleid
+                      , mutflag
+                      from cosmic.COSMIC_GRID_PART
+                      where sampletype='cell line'  AND lower(locusname) in ('braf')  union all
+                   select distinct 'GAD' sourcedb
+                     , lower(g.gene_name) gene_name
+                     , cleanname
+                     , lower(sampletype) sampletype
+                     , NVL(varianttype,'wildtype') As varianttype
+                     , aa_var_start
+                     , aa_var_stop
+                     , sampleid
+                     , to_number(decode(NVL(varianttype,'wildtype'), 'wildtype', 0, 'unknown', 0, 1))  mutflag
+                       from gad.gad_grid g
+                      where sampletype='cell line'  AND lower(gene_name) in ('braf')   ) s1  union all
+              Select distinct gene_name
+                    , cleanname
+                    , sampletype
+                    , varianttype
+                    , aa_var_start
+                    , aa_var_stop
+                    , first_value(mutflag) over (partition by cleanname
+                       ORDER BY cleanname, mutflag desc, sampleid) mutflag
+              from (
+                 select 'COSMIC' sourcedb
+                    , lower(locusname) gene_name
+                    , cleanname
+                    , sampletype
+                    , NVL(lower(varianttype),'wildtype') As varianttype
+                    , aa_var_start
+                    , aa_var_stop
+                    , sampleid
+                    , mutflag
+                    from cosmic.COSMIC_GRID_PART
+                   where sampletype!='cell line'  AND lower(locusname) in ('braf')   union all
+                select distinct 'GAD' sourcedb
+                    , lower(gene_name) gene_name
+                    , cleanname
+                    , lower(sampletype) sampletype
+                    , NVL(varianttype,'wildtype') As varianttype
+                    , aa_var_start
+                    , aa_var_stop
+                    , sampleid
+                    , to_number(decode(NVL(varianttype,'wildtype'), 'wildtype', 0, 'unknown', 0, 1))  mutflag
+                      from gad.gad_grid g
+                     where lower(sampletype) !='cell line'  AND lower(gene_name) in ('braf')   ) s2   )   WHERE varianttype||mutflag != 'wildtype1'  )  ORDER BY varianttype, aa_var_start, aa_var_stop -->
+  <!--_DBG1_ Executing SQL function MUTCOUNTPOS with SQLParam gene_name=braf -->
+   <!--_TRC_ SQL call completed
+ -->
+   <!--_TRC_ dbQuery_mutList ending -->
+   <!--_TRC_ Calling populateMutationList... -->
+   <!--_TRC_  populateMutationList begins -->
+   <!--_TRC_ converting array into obj's hash... -->
+  <!--_DBG1_ build complex array... (line 0) -->
+  <!--_DBG1_ build complex array... (line 1) -->
+  <!--_DBG1_ build complex array... (line 2) -->
+  <!--_DBG1_ build complex array... (line 3) -->
+  <!--_DBG1_ build complex array... (line 4) -->
+  <!--_DBG1_ build complex array... (line 5) -->
+  <!--_DBG1_ build complex array... (line 6) -->
+  <!--_DBG1_ build complex array... (line 7) -->
+  <!--_DBG1_ build deletion array... (line 8) -->
+  <!--_DBG1_ build deletion array... (line 9) -->
+  <!--_DBG1_ build deletion array... (line 10) -->
+  <!--_DBG1_ build deletion array... (line 11) -->
+  <!--_DBG1_ build deletion array... (line 12) -->
+  <!--_DBG1_ build deletion array... (line 13) -->
+  <!--_DBG1_ build insertion array... -->
+  <!--_DBG1_ build insertion array... -->
+  <!--_DBG1_ build insertion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build substituion array... -->
+  <!--_DBG1_ build complex array... (line 80) -->
+  <!--_DBG1_ build complex array... (line 81) -->
+  <!--_DBG1_ build wildtype array... (line 82) -->
+   <!--_TRC_ sub populateMutationList ends -->
+   <!--_TRC_ print_dbQuery_resultArray begins -->
+  <!-- ======================================================
+print_dbQuery_resultArray has contents as:
+._ 0:braf complex 469 469 5 61963 
+._ 1:braf complex 485 490 1 61963 
+._ 2:braf complex 597 597 6 61963 
+._ 3:braf complex 599 600 4 61963 
+._ 4:braf complex 599 603 2 61963 
+._ 5:braf complex 600 600 183 61963 
+._ 6:braf complex 600 605 2 61963 
+._ 7:braf complex 605 605 2 61963 
+._ 8:braf deletion 486 490 1 61963 
+._ 9:braf deletion 590 592 1 61963 
+._10:braf deletion 594 599 1 61963 
+._11:braf deletion 600 601 7 61963 
+._12:braf deletion 601 601 1 61963 
+._13:braf deletion 604 604 1 61963 
+._14:braf insertion 598 599 2 61963 
+._15:braf insertion 599 600 5 61963 
+._16:braf insertion _ _ 1 61963 
+._17:braf substitution 201 201 1 61963 
+._18:braf substitution 326 326 1 61963 
+._19:braf substitution 439 439 2 61963 
+._20:braf substitution 440 440 1 61963 
+._21:braf substitution 443 443 1 61963 
+._22:braf substitution 444 444 4 61963 
+._23:braf substitution 447 447 1 61963 
+._24:braf substitution 453 453 2 61963 
+._25:braf substitution 456 456 1 61963 
+._26:braf substitution 459 459 1 61963 
+._27:braf substitution 460 460 1 61963 
+._28:braf substitution 462 462 2 61963 
+._29:braf substitution 463 463 1 61963 
+._30:braf substitution 464 464 9 61963 
+._31:braf substitution 466 466 17 61963 
+._32:braf substitution 467 467 1 61963 
+._33:braf substitution 468 468 2 61963 
+._34:braf substitution 469 469 34 61963 
+._35:braf substitution 471 471 3 61963 
+._36:braf substitution 472 472 5 61963 
+._37:braf substitution 475 475 1 61963 
+._38:braf substitution 485 485 1 61963 
+._39:braf substitution 529 529 1 61963 
+._40:braf substitution 581 581 9 61963 
+._41:braf substitution 582 582 2 61963 
+._42:braf substitution 583 583 4 61963 
+._43:braf substitution 584 584 4 61963 
+._44:braf substitution 585 585 1 61963 
+._45:braf substitution 586 586 7 61963 
+._46:braf substitution 587 587 4 61963 
+._47:braf substitution 588 588 2 61963 
+._48:braf substitution 589 589 1 61963 
+._49:braf substitution 590 590 1 61963 
+._50:braf substitution 591 591 1 61963 
+._51:braf substitution 592 592 6 61963 
+._52:braf substitution 593 593 1 61963 
+._53:braf substitution 594 594 36 61963 
+._54:braf substitution 595 595 8 61963 
+._55:braf substitution 596 596 6 61963 
+._56:braf substitution 597 597 21 61963 
+._57:braf substitution 598 598 3 61963 
+._58:braf substitution 599 599 7 61963 
+._59:braf substitution 600 600 11915 61963 
+._60:braf substitution 601 601 52 61963 
+._61:braf substitution 602 602 1 61963 
+._62:braf substitution 603 603 4 61963 
+._63:braf substitution 604 604 3 61963 
+._64:braf substitution 605 605 6 61963 
+._65:braf substitution 606 606 5 61963 
+._66:braf substitution 607 607 1 61963 
+._67:braf substitution 608 608 2 61963 
+._68:braf substitution 609 609 2 61963 
+._69:braf substitution 610 610 1 61963 
+._70:braf substitution 611 611 1 61963 
+._71:braf substitution 612 612 2 61963 
+._72:braf substitution 614 614 4 61963 
+._73:braf substitution 615 615 2 61963 
+._74:braf substitution 616 616 5 61963 
+._75:braf substitution 617 617 1 61963 
+._76:braf substitution 618 618 7 61963 
+._77:braf substitution 619 619 1 61963 
+._78:braf substitution 682 682 1 61963 
+._79:braf substitution _ _ 1 61963 
+._80:braf unknown 600 600 62 61963 
+._81:braf unknown _ _ 103 61963 
+._82:braf wildtype _ _ 0 61963 
+End of result from dbQuery (result_array_ref)
+  ====================================================== -->
+  <!--_DBG1_ obj total mutationCount is 83  -->
+   <!--_TRC_  print_dbQuery_resultArray ends -->
+   <!--_TRC_ sub generateMuationList ends. -->
+   <!--_TRC_ alignmentAndMutation.pm: restored STDOUT -->
+   <!--_TRC_ Successfully completed call to generateMutationList -->
+   <!--_TRC_ getOrthologList chunk: begins -->
+  <!--_DBG1_ self-geneName is ::braf:: -->
+   <!--_TRC_ mutationList.pm->new() ends -->
+   <!--_TRC_ orthologList->setup() begins -->
+   <!--_TRC_ orthologList::execute() begin -->
+   <!--_TRC_ orthologList::prepareSQL_lookupGeneIdQ begins -->
+  <!--_DBG1_ returning sqlQuery of: select geneid from egene.homologene where  taxoid=9606 and genesymbol='BRAF' -->
+   <!--_TRC_ orthologList::prepareSQL_lookupGeneIdQ ends -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select geneid from egene.homologene where  taxoid=9606 and genesymbol='BRAF' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==673== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select proacc from egene.homologene where  taxoid=9606 and genesymbol='BRAF' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: NP_004324.2 -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==NP_004324.2== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 673 NP_004324.2== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='673' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: GAD -->
+  <!--_DBG1_ ..dbQuery_orthList row...: COSMIC -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==GAD ; COSMIC== -->
+  <!--_DBG1_ orthologList::retrieveGeneSeq() GAD section, lookup ==673== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select transcript_aa_seq from gad.transcript where egeneid = '673' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: MAALSGGGGGGAEPGQALFNGDMEPEAGAGAGAAASSAADPAIPEEVWNIKQMIKLTQEHIEALLDKFGGEHNPPSIYLEAYEEYTSKLDALQQREQQLLESLGNGTDFSVSSSASMDTVTSSSSSSLSVLPSSLSVFQNPTDVARSNPKSPQKPIVRVFLPNKQRTVVPARCGVTVRDSLKKALMMRGLIPECCAVYRIQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLFVSKFFEHHPIPQEEASLAETALTSGSSPSAPASDSIGPQILTSPSPSKSIPIPQPFRPADEDHRNQFGQRDRSSSAPNVHINTIEPVNIDDLIRDQGFRGDGGSTTGLSATPPASLPGSLTNVKALQKSPGPQRERKSSSSSEDRNRMKTLGRRDSSDDWEIPDGQITVGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYSTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSILWMAPEVIRMQDKNPYSFQSDVYAFGIVLYELMTGQLPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMAECLKKKRDERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYACASPKTPIQAGGYGAFPVH* -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==MAALSGGGGGGAEPGQALFNGDMEPEAGAGAGAAASSAADPAIPEEVWNIKQMIKLTQEHIEALLDKFGGEHNPPSIYLEAYEEYTSKLDALQQREQQLLESLGNGTDFSVSSSASMDTVTSSSSSSLSVLPSSLSVFQNPTDVARSNPKSPQKPIVRVFLPNKQRTVVPARCGVTVRDSLKKALMMRGLIPECCAVYRIQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLFVSKFFEHHPIPQEEASLAETALTSGSSPSAPASDSIGPQILTSPSPSKSIPIPQPFRPADEDHRNQFGQRDRSSSAPNVHINTIEPVNIDDLIRDQGFRGDGGSTTGLSATPPASLPGSLTNVKALQKSPGPQRERKSSSSSEDRNRMKTLGRRDSSDDWEIPDGQITVGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYSTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSILWMAPEVIRMQDKNPYSFQSDVYAFGIVLYELMTGQLPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMAECLKKKRDERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYACASPKTPIQAGGYGAFPVH*== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==GAD ; COSMIC== geneSeq10==MAALSGGGGG== -->
+   <!--_TRC_ orthologList::prepareSQL_orthologQ begins -->
+  <!--_DBG1_ orthologList::prepareSQL_orthologQ will return sqlQuery of: select A.geneid, B.taxoid, B.geneid, B.genesymbol, B.proAcc, B.progi from egene.homologene A left outer join egene.homologene B on A.orthid = B.orthid where B.taxoid<>9606 and A.geneid=(select geneid from egene.homologene where taxoid=9606 and genesymbol='BRAF') -->
+   <!--_TRC_ orthologList::prepareSQL_orthologQ ends -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select A.geneid, B.taxoid, B.geneid, B.genesymbol, B.proAcc, B.progi from egene.homologene A left outer join egene.homologene B on A.orthid = B.orthid where B.taxoid<>9606 and A.geneid=(select geneid from egene.homologene where taxoid=9606 and genesymbol='BRAF') :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 9598 463781 BRAF XP_001155024.1 114616352 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 9615 475526 BRAF XP_532749.2 73978840 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 9913 536051 BRAF XP_869161.2 119891390 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 10090 109880 Braf NP_647455.2 113199767 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 10116 114486 Braf XP_231692.4 109471941 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 9031 396239 BRAF NP_990633.1 45384286 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 7955 403065 braf NP_991307.2 46849736 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 7227 31221 phl NP_525047.1 17933524 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 7165 1278538 AgaP_AGAP004699 XP_318144.4 158298052 -->
+  <!--_DBG1_ ..dbQuery_orthList row...: 673 6239 177436 lin-45 NP_741430.3 71999519 -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+   <!--_TRC_  populateOrthologList begins -->
+   <!--_TRC_ converting array into obj's hash... -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 463781 XP_001155024.1== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='463781' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) XP_001155024.1 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: XP_001155024.1 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MAALSGGGGG== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MAALSGGGGG== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='9598' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Pan troglodytes -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Pan troglodytes== -->
+  <!--_DBG1_ ortholog array has this info stored :: BRAF 463781 XP_001155024.1 114616352 9598 MAALSGGGGGGAEPGQALFNGDMEPEAGAGAGAAASSAADPAIPEEVWNIKQMIKLTQEHIEALLDKFGGEHNPPSIYLEAYEEYTSKLDALQQREQQLLESLGNGTDFSVSSSASMDTVTSSSSSSLSVLPSSLSVFQNPTDVARSNPKSPQKPIVRVFLPNKQRTVVPARCGVTVRDSLKKALMMRGLIPECCAVYRIQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLFVSKFFEHHPIPQEEASLAETALTSGSSPSAPASDSIGPQILTSPSPSKSIPIPQPFRPADEDHRNQFGQRDRSSSAPNVHINTIEPVNIDDLIRDQGFRGDGGSTTGLSATPPASLPGSLTNVKALQKSPGPQRERKSSSSSEDRNRMKTLGRRDSSDDWEIPDGQITVGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYSTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSILWMAPEVIRMQDKNPYSFQSDVYAFGIVLYELMTGQLPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMAECLKKKRDERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYACASPKTPIQAGGYGEFAAFK (entry  1):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 475526 XP_532749.2== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='475526' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) XP_532749.2 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: XP_532749.2 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MVTMEEVWNI== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MVTMEEVWNI== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='9615' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Canis familiaris -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Canis familiaris== -->
+  <!--_DBG1_ ortholog array has this info stored :: BRAF 475526 XP_532749.2 73978840 9615 MVTMEEVWNIKQMIKLTQEHIEALLDKFGGEHNPPSIYLEAYEEYTSKLDALQQREQQLLESLGNGTDFSVSSSASTDTVTSSSSSSLSVLPSSLSVFQNPTDISRSNPKSPQKPIVRVFLPNKQRTVVPARCGVTVRDSLKKALMMRGLIPECCAVYRIQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLFVSKFFEHHPIPQEEASIAETALTSGSSPSAPPSDSPGPPILTSPSPSKSIPIPQPFRPADEDHRNQFGQRDRSSSAPNVHINTIEPVNIDDLIRDQGFRSDGAPLNHLMRCLRKCQSRTPSPLLHSVPSEIVFDFEPGPVFRGSTTGLSATPPASLPGSLTNVKALQKSPGPQRERKSSSSSEDRNRMKTLGRRDSSDDWEIPDGQITVGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYSTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSILWMAPEVIRMQDKNPYSFQSDVYAFGIVLYELMTGQLPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMAECLKKKRDERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYACASPKTPIQAGGYGEFAAFK (entry  2):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 536051 XP_869161.2== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='536051' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) XP_869161.2 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: XP_869161.2 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==AYEEYTSKLD== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==AYEEYTSKLD== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='9913' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Bos taurus -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Bos taurus== -->
+  <!--_DBG1_ ortholog array has this info stored :: BRAF 536051 XP_869161.2 119891390 9913 AYEEYTSKLDALQQREQQLLESLGNGTDFSVSSSASTDTVTSSSSSSLSVLPSSLSVFQNPTDVSRSNPKSPQKPIVRVFLPNKQRTVVPARCGVTVRDSLKKALMMRGLIPECCAVYRIQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLFVSKFFEHHPIPQEEASLAETTLPCGSSPSAPPSDSIGPPILTSPSPSKSIPIPQPFRPADEDHRNQFGQRDRSSSAPNVHINTIEPVNIDDLIRDQGFRSDGGSTTGLSATPPASLPGSLSNVKALQKSPGPQRERKSSSSSEDRNRMKTLGRRDSSDDWEIPDGQITVGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYSTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSILWMAPEVIRMQDKNPYSFQSDVYAFGIVLYELMTGQLPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMAECLKKKRDERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYACASPKTPIQAGGYGTFPVH (entry  3):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 109880 NP_647455.2== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='109880' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) NP_647455.2 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: NP_647455.2 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MAALSGGGGR== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MAALSGGGGR== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='10090' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Mus musculus -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Mus musculus== -->
+  <!--_DBG1_ ortholog array has this info stored :: Braf 109880 NP_647455.2 113199767 10090 MAALSGGGGRRSGGGGGGGGGGGGGDGGGGAEQGQALFNGDMEPEAGAGAAASSAADPAIPEEVWNIKQMIKLTQEHIEALLDKFGGEHNPPSIYLEAYEEYTSKLDALQQREQQLLESLVFQTPTDASRNNPKSPQKPIVRVFLPNKQRTVVPARCGVTVRDSLKKALMMRGLIPECCAVYRIQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLFVSKFFEHHPVPQEEASFPETALPSGSSSAPPSDSTGPQILTSPSPSKSIPIPQPFRPADEDHRNQFGQRDRSSSAPNVHINTIEPVNIDEKFPEVELQDQRDLIRDQGFRGDGAPLNQLMRCLRKYQSRTPSPLLHSVPSEIVFDFEPGPVFRGSTTGLSATPPASLPGSLTNVKALQKSPGPQRERKSSSSSSSEDRSRMKTLGRRDSSDDWEIPDGQITVGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYSTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSILWMAPEVIRMQDKNPYSFQSDVYAFGIVLYELMTGQLPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMAECLKKKRDERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYACASPKTPIQAGGYGEFAAFK (entry  4):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 114486 XP_231692.4== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='114486' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) XP_231692.4 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: XP_231692.4 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MAALSGGGGS== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MAALSGGGGS== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='10116' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Rattus norvegicus -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Rattus norvegicus== -->
+  <!--_DBG1_ ortholog array has this info stored :: Braf 114486 XP_231692.4 109471941 10116 MAALSGGGGSSSGGGGGGGGGGGGGGGGGAEQGQALFNGDMEPEAGAGAAASSAADPAIPEEVWNIKQMIKLTQEHIEALLDKFGGEHNPPSIYLEAYEEYTSKLDALQQREQQLLESLVFQTPTDVSRNNPKSPQKPIVRVFLPNKQRTVVPARCGVTVRDSLKKALMMRGLIPECCAVYRIQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLFVSKFFEHHPVPQEEAFSAETTLPSGCSSAPPSDSIGPQILTSPSPSKSIPIPQPFRPADEDHRNQFGQRDRSSSAPNVHINTIEPVNIDEKFPEVELQDQRDLIRDQGFRGDGAPLNQLMRCLRKYQSRTPSPLLHSVPSEIVFDFEPGPVFRGSTTGLSATPPASLPGSLTNVKALQKSPGPQRERKSSSSSSSTEDRSRMKTLGRRDSSDDWEIPDGQITVGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYSTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSILWMAPEVIRMQDKNPYSFQSDVYAFGIVLYELMTGQLPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMAECLKKKRDERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYACASPKTPIQAGGYGEFAAFK (entry  5):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 396239 NP_990633.1== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='396239' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) NP_990633.1 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: NP_990633.1 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MAALSSGSSA== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MAALSSGSSA== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='9031' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Gallus gallus -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Gallus gallus== -->
+  <!--_DBG1_ ortholog array has this info stored :: BRAF 396239 NP_990633.1 45384286 9031 MAALSSGSSAEGASLFNGDMEPEPPPPVLGACYAGSGGGDPAIPEEVWNIKQMIKLTQEHIEALLDKFGGEHNPPSIYLEAYEEYTSKLDALQQREQQLLESMGNGTDFSVSSSASTDTVASSSSSSLSVAPSSLSVYQNPTDMSRNNPKSPQKPIVRVFLPNKQRTVVPARCGVTVRDSLKKALMMRGLIPECCAVYRIQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLFVSKFFEHHPISQEETTLGETTPASGSYPSVPPSDSVGPPILPSPSPSKSIPIPQPFRPADEDHRNQFGQRDRSSSAPNVHINTIEPVNIDDLIRDQGVRGEGAPLNQLMRCLRKYQSRTPSPLLHSVPSEIVFDFEPGPVFRGSTAGLSATPPASLPGSLTNVKALQKSPGPQRERKSSSSSEDRNRMKTLGRRDSSDDWEIPDGQITVGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYSTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSILWMAPEVIRMQDKNPYSFQSDVYAFGIVLYELMTGQLPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMAECLKKKRDERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYACASPKTPIQAGGYGGFPVH (entry  6):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 403065 NP_991307.2== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='403065' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) NP_991307.2 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: NP_991307.2 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MAALSSAESP== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MAALSSAESP== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='7955' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Danio rerio -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Danio rerio== -->
+  <!--_DBG1_ ortholog array has this info stored :: braf 403065 NP_991307.2 46849736 7955 MAALSSAESPPPVFNGDTMNRDPERDPGLDELGAGLEPACPGEAAIPECQQGIPEEIWNIKQMIKLTQEHLEALLDKFGGEHNPPSIYLEAYEEYTSKLDALQQREQQLLEAIGNGTEFCSSPTPTLLDVKGQGIQSAPTAPNTLAVLQTPTDATRGNPRSPQKPIVRVFLPNKQRTVVPARCGMTVRDSLKKALMMRGLIPECCAVYRVQDGEKKPIGWDTDISWLTGEELHVEVLENVPLTTHNFVRKTFFTLAFCDFCRKLLFQGFRCQTCGYKFHQRCSTEVPLMCVNYDQLDLLLASKFLVHHPITQEEVSSEGTTPISEMCPSLPPSESTGSLCHPTVSPSKSIPIPQSFRPGEEDHRNQFGQRDRSSSAPNVHINTIEPVNIDDLIRDQGLPRSDGGSTTGLSATPPASLPGSLPNVKVSKSPCQPRERKPSSSSEDRNKMKTLGRRDSSDDWEIPEGQITLGQRIGSGSFGTVYKGKWHGDVAVKMLNVTAPTPQQLQAFKNEVGVLRKTRHVNILLFMGYTTKPQLAIVTQWCEGSSLYHHLHIIETKFEMIKLIDIARQTAQGMDYLHAKSIIHRDLKSNNIFLHEDLTVKIGDFGLATVKSRWSGSHQFEQLSGSTLWMAPEVIRLQDKNPYSFQSDVYAFGIVLYELMSGALPYSNINNRDQIIFMVGRGYLSPDLSKVRSNCPKAMKRLMADCLKKKREERPLFPQILASIELLARSLPKIHRSASEPSLNRAGFQTEDFSLYTCASPKTPIQAGGYGEFTAFK (entry  7):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 31221 NP_525047.1== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='31221' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) NP_525047.1 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: NP_525047.1 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MSSESSTEGD== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MSSESSTEGD== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='7227' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Drosophila melanogaster -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Drosophila melanogaster== -->
+  <!--_DBG1_ ortholog array has this info stored :: phl 31221 NP_525047.1 17933524 7227 MSSESSTEGDSDLYDPLAEELHNVQLVKHVTRENIDALNAKFANLQEPPAMYLIEYQELTSKLHELEAKEQELMERLNSQDQQEDSSLVERFKEQPHYQNQTQILQQQRQLARVHHGNDLTDSLGSQPGSQCGTLTRQPKILLRAHLPNQQRTSVEVISGVRLCDALMKALKLRQLTPDMCEVSTTHSGRHIIPWHTDIGTLHVEEIFVRLLDKFPIRTHIKHQIIRKTFFSLVFCEGCRRLLFTGFYCSQCNFRFHQRCANRVPMLCQPFPMDSYYQLLLAENPDNGVGFPGRGTAVRFNMSSRSRSRRCSSSGSSSSSKPPSSSSGNHRQGRPPRISQDDRSNSAPNVCINNIRSVTSEVQRSLIMQARPPLPHPCTDHSNSTQASPTSTLKHNRPRARSADESNKNLLLRDAKSSEENWNILAEEILIGPRIGSGSFGTVYRAHWHGPVAVKTLNVKTPSPAQLQAFKNEVAMLKKTRHCNILLFMGCVSKPSLAIVTQWCEGSSLYKHVHVSETKFKLNTLIDIGRQVAQGMDYLHAKNIIHRDLKSNNIFLHEDLSVKIGDFGLATAKTRWSGEKQANQPTGSILWMAPEVIRMQELNPYSFQSDVYAFGIVMYELLAECLPYGHISNKDQILFMVGRGLLRPDMSQVRSDAPQALKRLAEDCIKYTPKDRPLFRPLLNMLENMLRTLPKIHRSASEPNLTQSQLQNDEFLYLPSPKTPVNFNNFQFFGSAGNI (entry  8):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 1278538 XP_318144.4== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='1278538' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) XP_318144.4 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: XP_318144.4 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MSSADAEDTD== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MSSADAEDTD== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='7165' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Anopheles gambiae -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Anopheles gambiae== -->
+  <!--_DBG1_ ortholog array has this info stored :: AgaP_AGAP004699 1278538 XP_318144.4 158298052 7165 MSSADAEDTDEELDAFLQLEEDLRNIKSVIHVTRENIDALNEKFADFQQPPALYLEEYQELTSKLHDLEIKEQDLMEKKIQMQNEHMCGTLSRQSKMLLRAFLPNQQRTSVQVIPGMRLKDALAKALKRRNLTCEFCEVTAGNSNYPIPWETDVSALNCDEVFVRILDIGFPTYISHQFIRKTFFSLAFCECCRRLLFTGFYCNQCNYRFHQRCVDKVPPICSKRHMDSTFYHVLLANPESTAGIINPGAGGYSTSLRHPRSLNQHDRSNSAPNVCINNVIKPFFGGENRHVISNRPLQAQPNQEHSHSTQASPTNTLNHSKRPRARSADESNKNLLSPRDSKQSDENWNIQAEEILIGQRIGSGSFGTVYKAHWHGPVAVKTLNVKTPSPAQLQAFKNEVAMLKKTRHCNILLFMGCVSKPSLAIVTQWCEGSSLYKHIHVNETKFKLNTLIDIARQAAQGMDYLHAKNIIHRDLKSNNIFLHDDFSVKIGDFGLATAKVRWSGSQQSNQPTGSILWMAPEVIRMKEQNPYSFQSDVYAFGIVLYEMLTEQLPYNHINNKDQILFMVGCGKLRPDSTKVRTDCPQALKRCVEDCIKFNRDERPLFRLLLNMLENMLRTMPKFHRSASEPNFTQTQLQNDDFLYMCSSPKTPVNFHNFQFYNGAGNY (entry  9):: -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() starts.  params==orthologList=HASH(0x12804438) 177436 NP_741430.3== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select sourcedb from gad.gene_vw where egeneid='177436' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==== -->
+   <!--_TRC_ orthologList::ncbi_get() begin.  params :: orthologList=HASH(0x12804438) NP_741430.3 :: -->
+  <!--_DBG1_ ncbi_get ran fine for :: NP_741430.3 :: alphabet is ::protein:: -->
+   <!--_TRC_ orthologList::ncbi_get() ends. geneSeq10==MSRINFKKSS== -->
+   <!--_TRC_ orthologList::retrieveGeneSeq() ends. used sourcedb==== geneSeq10==MSRINFKKSS== -->
+   <!--_TRC_ orthologList::dbQuery() starting... -->
+  <!--_DBG1_ dbQuery will run sql of :: select organism from egene.taxonomy where taxo_id='6239' :: -->
+  <!--_DBG1_  ..dbQuery_orthList: individual rows follow...  -->
+  <!--_DBG1_ ..dbQuery_orthList row...: Caenorhabditis elegans -->
+   <!--_TRC_ dbquery_orthList:: SQL call completed -->
+   <!--_TRC_ dbQuery() ends -->
+  <!--_DBG1_ resultArrayRef2string will return==Caenorhabditis elegans== -->
+  <!--_DBG1_ ortholog array has this info stored :: lin-45 177436 NP_741430.3 71999519 6239 MSRINFKKSSASTTPTSPHCPSPRLISLPRCASSSIDRKDQASPMASPSTPLYPKHSDSLHSLSGHHSAGGAGTSDKEPPKFKYKMIMVHLPFDQHSRVEVRPGETARDAISKLLKKRNITPQLCHVNASSDPKQESIELSLTMEEIASRLPGNELWVHSEYLNTVSSIKHAIVRRTFIPPKSCDVCNNPIWMMGFRCEFCQFKFHQRCSSFAPLYCDLLQSVPKNEDLVKELFGIASQVEGPDRSVAEIVLANLAPTSGQSPAATPDSSHPDLTSIKRTGGVKRHPMAVSPQNETSQLSPSGPYPRDRSSSAPNINAINDEATVQHNQRILDALEAQRLEEESRDKTGSLLSTQARHRPHFQSGHILSGARMNRLHPLVDCTPLGSNSPSSTCSSPPGGLIGQPTLGQSPNVSGSTTSSLVAAHLHTLPLTPPQSAPPQKISPGFFRNRSRSPGERLDAQRPRPPQKPHHEDWEILPNEFIIQYKVGSGSFGTVYRGEFFGTVAIKKLNVVDPTPSQMAAFKNEVAVLKKTRHLNVLLFMGWVREPEIAIITQWCEGSSLYRHIHVQEPRVEFEMGAIIDILKQVSLGMNYLHSKNIIHRDLKTNNIFLMDDMSTVKIGDFGLATVKTKWTVNGGQQQQQPTGSILWMAPEVIRMQDDNPYTPQSDVYSFGICMYEILSSHLPYSNINNRDQILFMVGRGYLRPDRSKIRHDTPKSMLKLYDNCIMFDRNERPVFGEVLERLRDIILPKLTRSQSAPNVLHLDSQYSVMDAVMRSQMLSWSYIPPATAKTPQSAAAAAAANKKAYYNVYGLI (entry  10):: -->
+   <!--_TRC_ populateOrthologList() ends -->
+   <!--_TRC_ orthologList::execute() ending -->
+   <!--_TRC_ orthologList::produceFasta() starting.  params and oututput ==orthologList=HASH(0x12804438) /home/hoti1/tmp/mut/mut.fasta.20101230.txt== -->
+  <!--_DBG1_ obj primary gene name is  :: braf :: -->
+   <!--_TRC_ orthologList::produceFasta() ending.  Last ortholog index==10== file==/home/hoti1/tmp/mut/mut.fasta.20101230.txt== -->
+   <!--_TRC_ getOrthologList chunk: done calling orthList->execute(), produceFasta() -->
+   <!--_TRC_ sub alignAndMutation::executeClustalw begins.  params==alignmentAndMutation=HASH(0x127f5338) /home/hoti1/tmp/mut/mut.fasta.20101230.txt== -->
+  <!-- ===================== 
+  alignAndMutation::executeClustalw...performing alignment
+  starting call to $ factory->align(...)
+
+
+
+ CLUSTAL W (1.83) Multiple Sequence Alignments
+
+
+
+Sequence format is Pearson
+Sequence 1: 00_Human_NP_004324.2_9606_braf      766 aa
+Sequence 2: Pan_troglodytes_XP_001155024.1      767 aa
+Sequence 3: 20_Canis_familiaris_XP_532749.      767 aa
+Sequence 4: Bos_taurus_XP_869161.2_9913_BR      686 aa
+Sequence 5: 30_Mus_musculus_NP_647455.2_10      804 aa
+Sequence 6: Rattus_norvegicus_XP_231692.4_      804 aa
+Sequence 7: Gallus_gallus_NP_990633.1_9031      806 aa
+Sequence 8: Danio_rerio_NP_991307.2_7955_b      777 aa
+Sequence 9: Drosophila_melanogaster_NP_525      739 aa
+Sequence 10: Anopheles_gambiae_XP_318144.4_      667 aa
+Sequence 11: Caenorhabditis_elegans_NP_7414      813 aa
+Start of Pairwise alignments
+Aligning...
+Sequences (1:2) Aligned. Score:  99
+Sequences (1:3) Aligned. Score:  92
+Sequences (1:4) Aligned. Score:  98
+Sequences (1:5) Aligned. Score:  92
+Sequences (1:6) Aligned. Score:  92
+Sequences (1:7) Aligned. Score:  93
+Sequences (1:8) Aligned. Score:  83
+Sequences (1:9) Aligned. Score:  44
+Sequences (1:10) Aligned. Score:  48
+Sequences (1:11) Aligned. Score:  34
+Sequences (2:3) Aligned. Score:  93
+Sequences (2:4) Aligned. Score:  98
+Sequences (2:5) Aligned. Score:  92
+Sequences (2:6) Aligned. Score:  93
+Sequences (2:7) Aligned. Score:  93
+Sequences (2:8) Aligned. Score:  84
+Sequences (2:9) Aligned. Score:  44
+Sequences (2:10) Aligned. Score:  48
+Sequences (2:11) Aligned. Score:  34
+Sequences (3:4) Aligned. Score:  98
+Sequences (3:5) Aligned. Score:  93
+Sequences (3:6) Aligned. Score:  93
+Sequences (3:7) Aligned. Score:  95
+Sequences (3:8) Aligned. Score:  82
+Sequences (3:9) Aligned. Score:  44
+Sequences (3:10) Aligned. Score:  49
+Sequences (3:11) Aligned. Score:  35
+Sequences (4:5) Aligned. Score:  92
+Sequences (4:6) Aligned. Score:  92
+Sequences (4:7) Aligned. Score:  96
+Sequences (4:8) Aligned. Score:  87
+Sequences (4:9) Aligned. Score:  45
+Sequences (4:10) Aligned. Score:  46
+Sequences (4:11) Aligned. Score:  37
+Sequences (5:6) Aligned. Score:  98
+Sequences (5:7) Aligned. Score:  89
+Sequences (5:8) Aligned. Score:  80
+Sequences (5:9) Aligned. Score:  43
+Sequences (5:10) Aligned. Score:  49
+Sequences (5:11) Aligned. Score:  33
+Sequences (6:7) Aligned. Score:  89
+Sequences (6:8) Aligned. Score:  80
+Sequences (6:9) Aligned. Score:  43
+Sequences (6:10) Aligned. Score:  48
+Sequences (6:11) Aligned. Score:  33
+Sequences (7:8) Aligned. Score:  82
+Sequences (7:9) Aligned. Score:  44
+Sequences (7:10) Aligned. Score:  49
+Sequences (7:11) Aligned. Score:  33
+Sequences (8:9) Aligned. Score:  43
+Sequences (8:10) Aligned. Score:  48
+Sequences (8:11) Aligned. Score:  32
+Sequences (9:10) Aligned. Score:  69
+Sequences (9:11) Aligned. Score:  34
+Sequences (10:11) Aligned. Score:  35
+Guide tree        file created:   [/tmp/b50DzWNMTK/xWMnozWDrJ.dnd]
+Start of Multiple Alignment
+There are 10 groups
+Aligning...
+Group 1: Sequences:   2      Score:9721
+Group 2: Sequences:   2      Score:12653
+Group 3: Sequences:   2      Score:13132
+Group 4: Sequences:   4      Score:11428
+Group 5: Sequences:   2      Score:12431
+Group 6: Sequences:   3      Score:11153
+Group 7: Sequences:   7      Score:11326
+Group 8: Sequences:   8      Score:10889
+Group 9: Sequences:  10      Score:4992
+Group 10: Sequences:  11      Score:4540
+Alignment Score 162385
+GCG-Alignment file created      [/tmp/b50DzWNMTK/2t_c5_qvxs]
+  call to $ factory->align(...) completed
+  ===================== -->
+   <!--_TRC_ sub alignAndMutation::executeClustalw ends.  return obj==Bio::SimpleAlign=HASH(0x12e5c4c0)== -->
+   <!--_TRC_ sub alignAndMutation::printAlignmentAndMutation begins.  params==alignmentAndMutation=HASH(0x127f5338) Bio::SimpleAlign=HASH(0x12e5c4c0) mutationList=HASH(0x127f5320)== -->
+<!-- 
+Mutation List entries
+Total mutation count is (may not be accurate/useful)==83==
+Entries for mutation type==_del_list==
+  processing entry ==0== braf__deletion__486__490__1__61963__
+  processing entry ==1== braf__deletion__590__592__1__61963__
+  processing entry ==2== braf__deletion__594__599__1__61963__
+  processing entry ==3== braf__deletion__600__601__7__61963__
+  processing entry ==4== braf__deletion__601__601__1__61963__
+  processing entry ==5== braf__deletion__604__604__1__61963__
+
+Entries for mutation type==_ins_list==
+  processing entry ==0== braf__insertion__598__599__2__61963__
+  processing entry ==1== braf__insertion__599__600__5__61963__
+  processing entry ==2== braf__insertion__-__-__1__61963__
+
+Entries for mutation type==_sub_list==
+  processing entry ==0== braf__substitution__201__201__1__61963__
+  processing entry ==1== braf__substitution__326__326__1__61963__
+  processing entry ==2== braf__substitution__439__439__2__61963__
+  processing entry ==3== braf__substitution__440__440__1__61963__
+  processing entry ==4== braf__substitution__443__443__1__61963__
+  processing entry ==5== braf__substitution__444__444__4__61963__
+  processing entry ==6== braf__substitution__447__447__1__61963__
+  processing entry ==7== braf__substitution__453__453__2__61963__
+  processing entry ==8== braf__substitution__456__456__1__61963__
+  processing entry ==9== braf__substitution__459__459__1__61963__
+  processing entry ==10== braf__substitution__460__460__1__61963__
+  processing entry ==11== braf__substitution__462__462__2__61963__
+  processing entry ==12== braf__substitution__463__463__1__61963__
+  processing entry ==13== braf__substitution__464__464__9__61963__
+  processing entry ==14== braf__substitution__466__466__17__61963__
+  processing entry ==15== braf__substitution__467__467__1__61963__
+  processing entry ==16== braf__substitution__468__468__2__61963__
+  processing entry ==17== braf__substitution__469__469__34__61963__
+  processing entry ==18== braf__substitution__471__471__3__61963__
+  processing entry ==19== braf__substitution__472__472__5__61963__
+  processing entry ==20== braf__substitution__475__475__1__61963__
+  processing entry ==21== braf__substitution__485__485__1__61963__
+  processing entry ==22== braf__substitution__529__529__1__61963__
+  processing entry ==23== braf__substitution__581__581__9__61963__
+  processing entry ==24== braf__substitution__582__582__2__61963__
+  processing entry ==25== braf__substitution__583__583__4__61963__
+  processing entry ==26== braf__substitution__584__584__4__61963__
+  processing entry ==27== braf__substitution__585__585__1__61963__
+  processing entry ==28== braf__substitution__586__586__7__61963__
+  processing entry ==29== braf__substitution__587__587__4__61963__
+  processing entry ==30== braf__substitution__588__588__2__61963__
+  processing entry ==31== braf__substitution__589__589__1__61963__
+  processing entry ==32== braf__substitution__590__590__1__61963__
+  processing entry ==33== braf__substitution__591__591__1__61963__
+  processing entry ==34== braf__substitution__592__592__6__61963__
+  processing entry ==35== braf__substitution__593__593__1__61963__
+  processing entry ==36== braf__substitution__594__594__36__61963__
+  processing entry ==37== braf__substitution__595__595__8__61963__
+  processing entry ==38== braf__substitution__596__596__6__61963__
+  processing entry ==39== braf__substitution__597__597__21__61963__
+  processing entry ==40== braf__substitution__598__598__3__61963__
+  processing entry ==41== braf__substitution__599__599__7__61963__
+  processing entry ==42== braf__substitution__600__600__11915__61963__
+  processing entry ==43== braf__substitution__601__601__52__61963__
+  processing entry ==44== braf__substitution__602__602__1__61963__
+  processing entry ==45== braf__substitution__603__603__4__61963__
+  processing entry ==46== braf__substitution__604__604__3__61963__
+  processing entry ==47== braf__substitution__605__605__6__61963__
+  processing entry ==48== braf__substitution__606__606__5__61963__
+  processing entry ==49== braf__substitution__607__607__1__61963__
+  processing entry ==50== braf__substitution__608__608__2__61963__
+  processing entry ==51== braf__substitution__609__609__2__61963__
+  processing entry ==52== braf__substitution__610__610__1__61963__
+  processing entry ==53== braf__substitution__611__611__1__61963__
+  processing entry ==54== braf__substitution__612__612__2__61963__
+  processing entry ==55== braf__substitution__614__614__4__61963__
+  processing entry ==56== braf__substitution__615__615__2__61963__
+  processing entry ==57== braf__substitution__616__616__5__61963__
+  processing entry ==58== braf__substitution__617__617__1__61963__
+  processing entry ==59== braf__substitution__618__618__7__61963__
+  processing entry ==60== braf__substitution__619__619__1__61963__
+  processing entry ==61== braf__substitution__682__682__1__61963__
+  processing entry ==62== braf__substitution__-__-__1__61963__
+
+Entries for mutation type==_wil_list==
+  processing entry ==0== braf__wildtype__-__-__0__61963__
+
+Entries for mutation type==_com_list==
+  processing entry ==0== braf__complex__469__469__5__61963__
+  processing entry ==1== braf__complex__485__490__1__61963__
+  processing entry ==2== braf__complex__597__597__6__61963__
+  processing entry ==3== braf__complex__599__600__4__61963__
+  processing entry ==4== braf__complex__599__603__2__61963__
+  processing entry ==5== braf__complex__600__600__183__61963__
+  processing entry ==6== braf__complex__600__605__2__61963__
+  processing entry ==7== braf__complex__605__605__2__61963__
+  processing entry ==8== braf__unknown__600__600__62__61963__
+  processing entry ==9== braf__unknown__-__-__103__61963__
+
+printMutationList ends.
+-->
+   <!--_TRC_ printMutationList ends. -->
+   <!--_TRC_ sub alignAndMutation::buildMutPosArrays begins.  params==alignmentAndMutation=HASH(0x127f5338) Bio::SimpleAlign=HASH(0x12e5c4c0) mutationList=HASH(0x127f5320)== -->
+   <!--_TRC_  hasMutType ending... input was==del==. Returning==1== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) del===del== -->
+   <!--_TRC_  getNextMut ending... returning ==486 490 1 .===486,490,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==486==, STORE==611== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==487==, STORE==612== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==488==, STORE==613== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==489==, STORE==614== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==490==, STORE==615== logo ==-== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) del===del== -->
+   <!--_TRC_  getNextMut ending... returning ==590 592 1 .===590,592,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==590==, STORE==718== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==591==, STORE==719== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==592==, STORE==720== logo ==-== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) del===del== -->
+   <!--_TRC_  getNextMut ending... returning ==594 599 1 .===594,599,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==594==, STORE==722== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==595==, STORE==723== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==596==, STORE==724== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==597==, STORE==725== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==598==, STORE==726== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==599==, STORE==727== logo ==-== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) del===del== -->
+   <!--_TRC_  getNextMut ending... returning ==600 601 7 .===600,601,7== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==600==, STORE==728== logo ==-== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==601==, STORE==729== logo ==-== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) del===del== -->
+   <!--_TRC_  getNextMut ending... returning ==601 601 1 .===601,601,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==601==, STORE==729== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) del===del== -->
+   <!--_TRC_  getNextMut ending... returning ==604 604 1 .===604,604,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==del== at startPos ==604==, STORE==732== logo ==-== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) del===del== -->
+   <!--_TRC_  hasMutType ending... input was==sub==. Returning==1== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==201 201 1 .===201,201,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==201==, STORE==232== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==326 326 1 .===326,326,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==326==, STORE==364== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==439 439 2 .===439,439,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==439==, STORE==564== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==440 440 1 .===440,440,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==440==, STORE==565== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==443 443 1 .===443,443,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==443==, STORE==568== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==444 444 4 .===444,444,4== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==444==, STORE==569== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==447 447 1 .===447,447,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==447==, STORE==572== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==453 453 2 .===453,453,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==453==, STORE==578== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==456 456 1 .===456,456,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==456==, STORE==581== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==459 459 1 .===459,459,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==459==, STORE==584== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==460 460 1 .===460,460,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==460==, STORE==585== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==462 462 2 .===462,462,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==462==, STORE==587== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==463 463 1 .===463,463,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==463==, STORE==588== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==464 464 9 .===464,464,9== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==464==, STORE==589== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==466 466 17 .===466,466,17== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==466==, STORE==591== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==467 467 1 .===467,467,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==467==, STORE==592== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==468 468 2 .===468,468,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==468==, STORE==593== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==469 469 34 .===469,469,34== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==469==, STORE==594== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==471 471 3 .===471,471,3== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==471==, STORE==596== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==472 472 5 .===472,472,5== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==472==, STORE==597== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==475 475 1 .===475,475,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==475==, STORE==600== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==485 485 1 .===485,485,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==485==, STORE==610== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==529 529 1 .===529,529,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==529==, STORE==654== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==581 581 9 .===581,581,9== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==581==, STORE==708== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==582 582 2 .===582,582,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==582==, STORE==709== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==583 583 4 .===583,583,4== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==583==, STORE==710== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==584 584 4 .===584,584,4== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==584==, STORE==711== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==585 585 1 .===585,585,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==585==, STORE==712== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==586 586 7 .===586,586,7== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==586==, STORE==713== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==587 587 4 .===587,587,4== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==587==, STORE==714== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==588 588 2 .===588,588,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==588==, STORE==715== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==589 589 1 .===589,589,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==589==, STORE==716== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==590 590 1 .===590,590,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==590==, STORE==718== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==591 591 1 .===591,591,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==591==, STORE==719== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==592 592 6 .===592,592,6== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==592==, STORE==720== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==593 593 1 .===593,593,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==593==, STORE==721== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==594 594 36 .===594,594,36== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==594==, STORE==722== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==595 595 8 .===595,595,8== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==595==, STORE==723== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==596 596 6 .===596,596,6== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==596==, STORE==724== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==597 597 21 .===597,597,21== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==597==, STORE==725== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==598 598 3 .===598,598,3== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==598==, STORE==726== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==599 599 7 .===599,599,7== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==599==, STORE==727== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==600 600 11915 .===600,600,11915== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==600==, STORE==728== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==601 601 52 .===601,601,52== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==601==, STORE==729== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==602 602 1 .===602,602,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==602==, STORE==730== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==603 603 4 .===603,603,4== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==603==, STORE==731== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==604 604 3 .===604,604,3== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==604==, STORE==732== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==605 605 6 .===605,605,6== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==605==, STORE==733== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==606 606 5 .===606,606,5== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==606==, STORE==734== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==607 607 1 .===607,607,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==607==, STORE==735== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==608 608 2 .===608,608,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==608==, STORE==738== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==609 609 2 .===609,609,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==609==, STORE==739== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==610 610 1 .===610,610,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==610==, STORE==740== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==611 611 1 .===611,611,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==611==, STORE==741== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==612 612 2 .===612,612,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==612==, STORE==742== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==614 614 4 .===614,614,4== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==614==, STORE==744== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==615 615 2 .===615,615,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==615==, STORE==745== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==616 616 5 .===616,616,5== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==616==, STORE==746== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==617 617 1 .===617,617,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==617==, STORE==747== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==618 618 7 .===618,618,7== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==618==, STORE==748== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==619 619 1 .===619,619,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==619==, STORE==749== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  getNextMut ending... returning ==682 682 1 .===682,682,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==sub== at startPos ==682==, STORE==812== logo ==.== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) sub===sub== -->
+   <!--_TRC_  hasMutType ending... input was==ins==. Returning==1== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) ins===ins== -->
+   <!--_TRC_  getNextMut ending... returning ==598 599 2 .===598,599,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==ins== at startPos ==598==, STORE==726== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==ins== at startPos ==599==, STORE==727== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) ins===ins== -->
+   <!--_TRC_  getNextMut ending... returning ==599 600 5 .===599,600,5== -->
+  <!--_DBG1_ buildMutPosArrays> IN==ins== at startPos ==599==, STORE==727== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==ins== at startPos ==600==, STORE==728== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) ins===ins== -->
+   <!--_TRC_  hasMutType ending... input was==com==. Returning==1== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==469 469 5 .===469,469,5== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==469==, STORE==594== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==485 490 1 .===485,490,1== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==485==, STORE==610== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==486==, STORE==611== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==487==, STORE==612== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==488==, STORE==613== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==489==, STORE==614== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==490==, STORE==615== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==597 597 6 .===597,597,6== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==597==, STORE==725== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==599 600 4 .===599,600,4== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==599==, STORE==727== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==600==, STORE==728== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==599 603 2 .===599,603,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==599==, STORE==727== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==600==, STORE==728== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==601==, STORE==729== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==602==, STORE==730== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==603==, STORE==731== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==600 600 183 .===600,600,183== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==600==, STORE==728== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==600 605 2 .===600,605,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==600==, STORE==728== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==601==, STORE==729== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==602==, STORE==730== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==603==, STORE==731== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==604==, STORE==732== logo ==*== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==605==, STORE==733== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==605 605 2 .===605,605,2== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==605==, STORE==733== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+   <!--_TRC_  getNextMut ending... returning ==600 600 62 .===600,600,62== -->
+  <!--_DBG1_ buildMutPosArrays> IN==com== at startPos ==600==, STORE==728== logo ==*== -->
+   <!--_TRC_  getNextMut starting... got ==mutationList=HASH(0x127f5320) com===com== -->
+Gene Symbol: braf <BR>Primary Site:  <BR>Number of mutations: 83<BR>Alignment Algorithm: ClustalW <BR><BR><BR>
+
+<!-- Result of buildMutPosArrays:<BR>
+                                                                                                                                                                                                                                       .                                                                                                                                   .                                                                                                                                                                                                       ..  ..  .     .  .  .. ... ...* ..  .         ******                                      .                                                     ......... ***.************..  ..... ......                                                              .                                                                                                        <BR>
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 1 0 0 1 4 0 0 1 0 0 0 0 0 2 0 0 1 0 0 1 1 0 2 1 9 0 17 1 2 39 0 3 5 0 0 1 0 0 0 0 0 0 0 0 0 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 9 2 4 4 1 7 4 2 1 0 2 2 7 1 37 9 7 28 6 21 12180 64 5 8 6 10 5 1 0 0 2 2 1 1 2 0 4 2 5 1 7 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 <BR>  -->
+<PRE>                                        &nbsp;&nbsp;&nbsp;&nbsp;1                                                                         70
+                               Consensus&nbsp;::&nbsp;MAAALGGGGG ASGGGGGGGM AALSGGGGGG AEPGQALFNG DMEPEAGAGA GAAASSAADP AIPEEVWNIK
+                              Match line&nbsp;::&nbsp;                                                                            
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;.......... .........M AALSGGGGGG AEPGQALFNG DMEPEAGAGA GAAASSAADP AIPEEVWNIK </FONT>
+                               Mutations&nbsp;::&nbsp;                                                                             
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                                                                             
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;.......... .......... .......... .......... .......... .........M VTMEEVWNIK 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;MAALSGGGGR RSGGGGGGGG GGGGGDGGGG AEQGQALFNG DMEPEAGAG. .AAASSAADP AIPEEVWNIK 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;.......... .......... .......... .......... ...MSSADAE DTDEELDAFL QLEEDLRNIK 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;.......... .......... .......... .......... .......... .......... .......... 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;.......... .......... .......... .......... ........MS RINFKKSSAS TTPTSPHCPS 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;.........M AALSSAESPP PVFNGDTMNR DPERDPGLDE LGAGLEPACP GEAAIPECQQ GIPEEIWNIK 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;.......... .......... .......... .......... .....MSSES STEGDSDLYD PLAEELHNVQ 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;.......... .........M AALSSGSSAE GASLFNGDME PEPPPPVLGA CYAGSGGGDP AIPEEVWNIK 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;.......... .........M AALSGGGGGG AEPGQALFNG DMEPEAGAGA GAAASSAADP AIPEEVWNIK 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;.MAALSGGGG SSSGGGGGGG GGGGGGGGGG AEQGQALFNG DMEPEAGAG. .AAASSAADP AIPEEVWNIK 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;71                                                                       140
+                               Consensus&nbsp;::&nbsp;QMIKLTQEHI EALLDKFGGE HNPPSIYLEA YEEYTSKLDA LQQREQQLLE SLGNGTDFSV SSSASTDTVT
+                              Match line&nbsp;::&nbsp;                                 * : :..*.  *. :..                          
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;QMIKLTQEHI EALLDKFGGE HNPPSIYLEA YEEYTSKLDA LQQREQQLLE SLGNGTDFSV SSSASMDTVT </FONT>
+                               Mutations&nbsp;::&nbsp;                                                                             
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                                                                             
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;QMIKLTQEHI EALLDKFGGE HNPPSIYLEA YEEYTSKLDA LQQREQQLLE SLGNGTDFSV SSSASTDTVT 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;QMIKLTQEHI EALLDKFGGE HNPPSIYLEA YEEYTSKLDA LQQREQQLLE SL........ .......... 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;SVIHVTRENI DALNEKFADF QQPPALYLEE YQELTSKLHD LEIKEQDLME KKIQMQN... .......... 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;.......... .......... .........A YEEYTSKLDA LQQREQQLLE SLGNGTDFSV SSSASTDTVT 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;PRLISLPRCA SSSIDRKDQA SPMASPSTPL YPKHSDSLHS LSGHHS.... .......... .......... 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;QMIKLTQEHL EALLDKFGGE HNPPSIYLEA YEEYTSKLDA LQQREQQLLE AIGNGTEFCS SPTPTLLDVK 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;LVKHVTRENI DALNAKFANL QEPPAMYLIE YQELTSKLHE LEAKEQELME RLNSQDQQED SSLVERFKEQ 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;QMIKLTQEHI EALLDKFGGE HNPPSIYLEA YEEYTSKLDA LQQREQQLLE SMGNGTDFSV SSSASTDTVA 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;QMIKLTQEHI EALLDKFGGE HNPPSIYLEA YEEYTSKLDA LQQREQQLLE SLGNGTDFSV SSSASMDTVT 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;QMIKLTQEHI EALLDKFGGE HNPPSIYLEA YEEYTSKLDA LQQREQQLLE SL........ .......... 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;141                                                                      210
+                               Consensus&nbsp;::&nbsp;SSSSSSLSVL PSSLSVFQNP HGNDLTDSLA GGTDVSRSNP KSPQKPIVRV FLPNKQRTVV PARCGVTVRD
+                              Match line&nbsp;::&nbsp;                                                  :: . .** .*:: *  .  *    *
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;SSSSSSLSVL PSSLSVFQNP .......... ..TDVARSNP KSPQKPIVRV FLPNKQRTVV PARCGVTVRD </FONT>
+                               Mutations&nbsp;::&nbsp;                                                                             
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                                                                             
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;SSSSSSLSVL PSSLSVFQNP .......... ..TDISRSNP KSPQKPIVRV FLPNKQRTVV PARCGVTVRD 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;.......... .....VFQTP .......... ..TDASRNNP KSPQKPIVRV FLPNKQRTVV PARCGVTVRD 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;.......... .......... .......... ...EHMCGTL SRQSKMLLRA FLPNQQRTSV QVIPGMRLKD 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;SSSSSSLSVL PSSLSVFQNP .......... ..TDVSRSNP KSPQKPIVRV FLPNKQRTVV PARCGVTVRD 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;.......... .......... .........A GGAGTSDKEP PKFKYKMIMV HLPFDQHSRV EVRPGETARD 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;GQGIQSAPTA PNTLAVLQTP .......... ..TDATRGNP RSPQKPIVRV FLPNKQRTVV PARCGMTVRD 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;PHYQNQTQIL QQQRQLARVH HGNDLTDSLG SQPGSQCGTL TRQPKILLRA HLPNQQRTSV EVISGVRLCD 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;SSSSSSLSVA PSSLSVYQNP .......... ..TDMSRNNP KSPQKPIVRV FLPNKQRTVV PARCGVTVRD 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;SSSSSSLSVL PSSLSVFQNP .......... ..TDVARSNP KSPQKPIVRV FLPNKQRTVV PARCGVTVRD 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;.......... .....VFQTP .......... ..TDVSRNNP KSPQKPIVRV FLPNKQRTVV PARCGVTVRD 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;211                                                                      280
+                               Consensus&nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR IQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHNSSI KHQFVRKTFF
+                              Match line&nbsp;::&nbsp;:: * *  *  :  : * *     .  .  *      :  :        .:        .         ::*:**:
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR IQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHN... ...FVRKTFF </FONT>
+                               Mutations&nbsp;::&nbsp;                       <SPAN TITLE="Mutation location: 201-201 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>                                                     
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                       <FONT style="background-color: green" color="black">.</FONT>                                                     
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR IQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHN... ...FVRKTFF 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR IQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHN... ...FVRKTFF 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;ALAKALKRRN LTCEFCEVTA GNS..NYPIP WETDVSALNC DEVFVRILDI G.FPTYIS.. .HQFIRKTFF 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR IQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHN... ...FVRKTFF 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;AISKLLKKRN ITPQLCHVNA SSDPKQESIE LSLTMEEIAS RLPGNELWVH SEYLNTVSSI KHAIVRRTFI 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR VQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHN... ...FVRKTFF 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;ALMKALKLRQ LTPDMCEVST THSG.RHIIP WHTDIGTLHV EEIFVRLLDK FPIRTHIK.. .HQIIRKTFF 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR IQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHN... ...FVRKTFF 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR IQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHN... ...FVRKTFF 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;SLKKALMMRG LIPECCAVYR IQDGEKKPIG WDTDISWLTG EELHVEVLEN VPLTTHN... ...FVRKTFF 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;281                                                                      350
+                               Consensus&nbsp;::&nbsp;TLAFCDFCRN KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLFVS KFFEHHPIPQ EEASLAETAL
+                              Match line&nbsp;::&nbsp;.   *: *.   : : ** *.  * ::*****    .*  *                                   
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;TLAFCDFCR. KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLFVS KFFEHHPIPQ EEASLAETAL </FONT>
+                               Mutations&nbsp;::&nbsp;                                                                             
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                                                                             
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;TLAFCDFCR. KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLFVS KFFEHHPIPQ EEASIAETAL 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;TLAFCDFCR. KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLFVS KFFEHHPVPQ EEASFPETAL 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;SLAFCECCR. RLLFTGFYCN QCNYRFHQRC VDKVPPICS. ......KRHM DSTFYHVLLA NPESTAGIIN 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;TLAFCDFCR. KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLFVS KFFEHHPIPQ EEASLAETTL 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;PPKSCDVCNN PIWMMGFRCE FCQFKFHQRC SSFAPLYCDL LQSVPKNEDL VKELFGIASQ VEGPDRSVAE 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;TLAFCDFCR. KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLLAS KFLVHHPITQ EEVSSEGTTP 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;SLVFCEGCR. RLLFTGFYCS QCNFRFHQRC ANRVPMLCQ. ......PFPM DSYYQLLLAE NPDNGVGFPG 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;TLAFCDFCR. KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLFVS KFFEHHPISQ EETTLGETTP 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;TLAFCDFCR. KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLFVS KFFEHHPIPQ EEASLAETAL 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;TLAFCDFCR. KLLFQGFRCQ TCGYKFHQRC STEVPLMCVN YDQLDLLFVS KFFEHHPVPQ EEAFSAETTL 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;351                                                                      420
+                               Consensus&nbsp;::&nbsp;PSGSSPSAPP SDSIGPQILT SPSPSKSIPI PQPFRRHPMA VSPQNPADED HRNQFGQRDR SSSAPNVHIN
+                              Match line&nbsp;::&nbsp;                                                               ** *.****:   
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;TSGSSPSAPA SDSIGPQILT SPSPSKSIPI PQPFR..... .....PADED HRNQFGQRDR SSSAPNVHIN </FONT>
+                               Mutations&nbsp;::&nbsp;              <SPAN TITLE="Mutation location: 326-326 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>                                                              
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;              <FONT style="background-color: green" color="black">.</FONT>                                                              
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;TSGSSPSAPP SDSPGPPILT SPSPSKSIPI PQPFR..... .....PADED HRNQFGQRDR SSSAPNVHIN 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;PSGSS.SAPP SDSTGPQILT SPSPSKSIPI PQPFR..... .....PADED HRNQFGQRDR SSSAPNVHIN 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;.......... .......... .........P GAGGY..... .....STSLR HPRSLNQHDR SNSAPNVCIN 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;PCGSSPSAPP SDSIGPPILT SPSPSKSIPI PQPFR..... .....PADED HRNQFGQRDR SSSAPNVHIN 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;IVLANLAPTS GQSPAATPDS SHPDLTSIKR TGGVKRHPMA VSPQNETSQL SPSGPYPRDR SSSAPNINAI 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;ISEMCPSLPP SESTGSLCHP TVSPSKSIPI PQSFR..... .....PGEED HRNQFGQRDR SSSAPNVHIN 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;RGTAVRFNMS SRSRSRRCSS SGSSSSSKPP SSSSG..... .....NHRQG RPPRISQDDR SNSAPNVCIN 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;ASGSYPSVPP SDSVGPPILP SPSPSKSIPI PQPFR..... .....PADED HRNQFGQRDR SSSAPNVHIN 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;TSGSSPSAPA SDSIGPQILT SPSPSKSIPI PQPFR..... .....PADED HRNQFGQRDR SSSAPNVHIN 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;PSGCS.SAPP SDSIGPQILT SPSPSKSIPI PQPFR..... .....PADED HRNQFGQRDR SSSAPNVHIN 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;421                                                                      490
+                               Consensus&nbsp;::&nbsp;TIEPVNIDDN IDDKFPEVEL QDQRDLIRDQ GFRGDGAPLN QLMRCLRKYQ SRTPSPLLHS VPSEIVFDFE
+                              Match line&nbsp;::&nbsp;.                                                                           
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;TIEPV....N IDD....... .....LIRDQ GFRGDGG... .......... .......... .......... </FONT>
+                               Mutations&nbsp;::&nbsp;                                                                             
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                                                                             
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;TIEPVNIDD. .......... .....LIRDQ GFRSDGAPLN HLMRCLRKCQ SRTPSPLLHS VPSEIVFDFE 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;TIEPV....N IDEKFPEVEL QDQRDLIRDQ GFRGDGAPLN QLMRCLRKYQ SRTPSPLLHS VPSEIVFDFE 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;NVIKPFFG.. .......... .......... .......... .......... .......... .......... 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;TIEPVNIDD. .......... .....LIRDQ GFRSDGG... .......... .......... .......... 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;NDEATVQHNQ RILDALEAQR LEEESRDKTG SLLSTQARHR PHFQSGHILS GARMNRLHPL VDCTPLGSNS 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;TIEPVN.... .......... ..IDDLIRDQ GLPRSDG... .......... .......... .......... 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;NIRSVTSE.. .......... .......... .......... .......... .......... .......... 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;TIEPVNIDD. .......... .....LIRDQ GVRGEGAPLN QLMRCLRKYQ SRTPSPLLHS VPSEIVFDFE 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;TIEPV....N IDD....... .....LIRDQ GFRGDGG... .......... .......... .......... 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;TIEPV....N IDEKFPEVEL QDQRDLIRDQ GFRGDGAPLN QLMRCLRKYQ SRTPSPLLHS VPSEIVFDFE 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;491                                                                      560
+                               Consensus&nbsp;::&nbsp;PGPVFRGSTT GLSATPPASL PGSLTNVKAL SLVAAHLHTL PLTPPQSQKS PGPQRERKSS SSSEADEEDR
+                              Match line&nbsp;::&nbsp;            :   *     .    . ..                      .             : .      
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;.......STT GLSATPPASL PGSLTNVKAL .......... .......QKS PGPQRERKSS SSSE....DR </FONT>
+                               Mutations&nbsp;::&nbsp;                                                                             
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                                                                             
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;PGPVFRGSTT GLSATPPASL PGSLTNVKAL .......... .......QKS PGPQRERKSS SSSE....DR 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;PGPVFRGSTT GLSATPPASL PGSLTNVKAL .......... .......QKS PGPQRERKSS SSSS..SEDR 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;.....GENRH VISNRPLQAQ PNQEHSHSTQ .......... .......ASP TNTLNHSKRP RARSADESNK 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;.......STT GLSATPPASL PGSLSNVKAL .......... .......QKS PGPQRERKSS SSSE....DR 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;PSSTCSSPPG GLIGQPTLGQ SPNVSGSTTS SLVAAHLHTL PLTPPQSAPP QKISPGFFRN RSRSPGERLD 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;......GSTT GLSATPPASL PGSLPNVKVS .......... .......KSP CQPRERKPSS SSED.....R 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;.....VQRSL IMQARPPLPH PCTDHSNSTQ .......... .......ASP TSTLKHN.RP RARSADESNK 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;PGPVFRGSTA GLSATPPASL PGSLTNVKAL .......... .......QKS PGPQRERKSS SSSE....DR 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;.......STT GLSATPPASL PGSLTNVKAL .......... .......QKS PGPQRERKSS SSSE....DR 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;PGPVFRGSTT GLSATPPASL PGSLTNVKAL .......... .......QKS PGPQRERKSS SSSSS.TEDR 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;561                                                                      630
+                               Consensus&nbsp;::&nbsp;NRMKTLGRRD SSDDWEIPDG QITVGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL
+                              Match line&nbsp;::&nbsp;        :    ::*:*    :: :  ::** *******:.. :.* **:* * **  *:* *:  ******.:*
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;NRMKTLGRRD SSDDWEIPDG QITVGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL </FONT>
+                               Mutations&nbsp;::&nbsp;   <SPAN TITLE="Mutation location: 439-439 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 440-440 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>  <SPAN TITLE="Mutation location: 443-443 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 444-444 - Type: sub - Frequency 4 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>   <SPAN TITLE="Mutation location: 447-447 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>     <SPAN TITLE="Mutation location: 453-453 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>   <SPAN TITLE="Mutation location: 456-456 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>  <SPAN TITLE="Mutation location: 459-459 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 460-460 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN> <SPAN TITLE="Mutation location: 462-462 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 463-463 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 464-464 - Type: sub - Frequency 9 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>  <SPAN TITLE="Mutation location: 466-466 - Type: sub - Frequency 17 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 467-467 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 468-468 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 469-469 - Type: sub - Frequency 34 &#10;&#13; Mutation location: 469-469 - Type: com - Frequency 5 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN> <SPAN TITLE="Mutation location: 471-471 - Type: sub - Frequency 3 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 472-472 - Type: sub - Frequency 5 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>  <SPAN TITLE="Mutation location: 475-475 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>          <SPAN TITLE="Mutation location: 485-485 - Type: sub - Frequency 1 &#10;&#13; Mutation location: 485-490 - Type: com - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN> <SPAN TITLE="Mutation location: 486-490 - Type: del - Frequency 1 &#10;&#13; Mutation location: 485-490 - Type: com - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 486-490 - Type: del - Frequency 1 &#10;&#13; Mutation location: 485-490 - Type: com - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 486-490 - Type: del - Frequency 1 &#10;&#13; Mutation location: 485-490 - Type: com - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 486-490 - Type: del - Frequency 1 &#10;&#13; Mutation location: 485-490 - Type: com - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 486-490 - Type: del - Frequency 1 &#10;&#13; Mutation location: 485-490 - Type: com - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN>                 
+                                _del_arr&nbsp;::&nbsp;                                                       <FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT>                 
+                                _sub_arr&nbsp;::&nbsp;   <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT>  <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT>   <FONT style="background-color: green" color="black">.</FONT>     <FONT style="background-color: green" color="black">.</FONT>   <FONT style="background-color: green" color="black">.</FONT>  <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT> <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT>  <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT> <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT>  <FONT style="background-color: green" color="black">.</FONT>          <FONT style="background-color: green" color="black">.</FONT>                       
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                    <FONT style="background-color: green" color="black">*</FONT>                <FONT style="background-color: green" color="black">*</FONT> <FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT>                 
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;NRMKTLGRRD SSDDWEIPDG QITVGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;SRMKTLGRRD SSDDWEIPDG QITVGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;NLLSPRDSKQ SDENWNIQAE EILIGQRIGS GSFGTVYKAH WHGPVAVKTL NVKTPSPAQL QAFKNEVAML 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;NRMKTLGRRD SSDDWEIPDG QITVGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;AQRPRPPQKP HHEDWEILPN EFIIQYKVGS GSFGTVYRGE FFGTVAIKKL NVVDPTPSQM AAFKNEVAVL 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;NKMKTLGRRD SSDDWEIPEG QITLGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;NLLLR.DAKS SEENWNILAE EILIGPRIGS GSFGTVYRAH WHGPVAVKTL NVKTPSPAQL QAFKNEVAML 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;NRMKTLGRRD SSDDWEIPDG QITVGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;NRMKTLGRRD SSDDWEIPDG QITVGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;SRMKTLGRRD SSDDWEIPDG QITVGQRIGS GSFGTVYKGK WHGDVAVKML NVTAPTPQQL QAFKNEVGVL 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;631                                                                      700
+                               Consensus&nbsp;::&nbsp;RKTRHVNILL FMGYSTKPQL AIVTQWCEGS SLYHHLHIIE TRVKFEMIKL IDIARQTAQG MDYLHAKSII
+                              Match line&nbsp;::&nbsp;:**** *:** ***   :*.: **:******* ***:*:*: * .  :*::  : *** :*.: * *:***:*.**
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;RKTRHVNILL FMGYSTKPQL AIVTQWCEGS SLYHHLHIIE T..KFEMIKL IDIARQTAQG MDYLHAKSII </FONT>
+                               Mutations&nbsp;::&nbsp;                         <SPAN TITLE="Mutation location: 529-529 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>                                                   
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                         <FONT style="background-color: green" color="black">.</FONT>                                                   
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;RKTRHVNILL FMGYSTKPQL AIVTQWCEGS SLYHHLHIIE T..KFEMIKL IDIARQTAQG MDYLHAKSII 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;RKTRHVNILL FMGYSTKPQL AIVTQWCEGS SLYHHLHIIE T..KFEMIKL IDIARQTAQG MDYLHAKSII 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;KKTRHCNILL FMGCVSKPSL AIVTQWCEGS SLYKHIHVNE T..KFKLNTL IDIARQAAQG MDYLHAKNII 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;RKTRHVNILL FMGYSTKPQL AIVTQWCEGS SLYHHLHIIE T..KFEMIKL IDIARQTAQG MDYLHAKSII 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;KKTRHLNVLL FMGWVREPEI AIITQWCEGS SLYRHIHVQE PRVEFEMGAI IDILKQVSLG MNYLHSKNII 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;RKTRHVNILL FMGYTTKPQL AIVTQWCEGS SLYHHLHIIE T..KFEMIKL IDIARQTAQG MDYLHAKSII 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;KKTRHCNILL FMGCVSKPSL AIVTQWCEGS SLYKHVHVSE T..KFKLNTL IDIGRQVAQG MDYLHAKNII 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;RKTRHVNILL FMGYSTKPQL AIVTQWCEGS SLYHHLHIIE T..KFEMIKL IDIARQTAQG MDYLHAKSII 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;RKTRHVNILL FMGYSTKPQL AIVTQWCEGS SLYHHLHIIE T..KFEMIKL IDIARQTAQG MDYLHAKSII 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;RKTRHVNILL FMGYSTKPQL AIVTQWCEGS SLYHHLHIIE T..KFEMIKL IDIARQTAQG MDYLHAKSII 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;701                                                                      770
+                               Consensus&nbsp;::&nbsp;HRDLKSNNIF LHEDLTTVKI GDFGLATVKS RWSGSGGHQF EQLSGSILWM APEVIRMQDK NPYSFQSDVY
+                              Match line&nbsp;::&nbsp;*****:**** * :*:: *** *******.*  :*: .  :*  :* :** *** ******:::  ***: *****
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;HRDLKSNNIF LHEDLT.VKI GDFGLATVKS RWSGS..HQF EQLSGSILWM APEVIRMQDK NPYSFQSDVY </FONT>
+                               Mutations&nbsp;::&nbsp;       <SPAN TITLE="Mutation location: 581-581 - Type: sub - Frequency 9 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 582-582 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 583-583 - Type: sub - Frequency 4 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN> <SPAN TITLE="Mutation location: 584-584 - Type: sub - Frequency 4 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 585-585 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 586-586 - Type: sub - Frequency 7 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 587-587 - Type: sub - Frequency 4 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 588-588 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 589-589 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN> <SPAN TITLE="Mutation location: 590-592 - Type: del - Frequency 1 &#10;&#13; Mutation location: 590-590 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 590-592 - Type: del - Frequency 1 &#10;&#13; Mutation location: 591-591 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 590-592 - Type: del - Frequency 1 &#10;&#13; Mutation location: 592-592 - Type: sub - Frequency 6 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN> <SPAN TITLE="Mutation location: 593-593 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 594-599 - Type: del - Frequency 1 &#10;&#13; Mutation location: 594-594 - Type: sub - Frequency 36 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 594-599 - Type: del - Frequency 1 &#10;&#13; Mutation location: 595-595 - Type: sub - Frequency 8 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 594-599 - Type: del - Frequency 1 &#10;&#13; Mutation location: 596-596 - Type: sub - Frequency 6 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 594-599 - Type: del - Frequency 1 &#10;&#13; Mutation location: 597-597 - Type: sub - Frequency 21 &#10;&#13; Mutation location: 597-597 - Type: com - Frequency 6 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 594-599 - Type: del - Frequency 1 &#10;&#13; Mutation location: 598-598 - Type: sub - Frequency 3 &#10;&#13; Mutation location: 598-599 - Type: ins - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 594-599 - Type: del - Frequency 1 &#10;&#13; Mutation location: 599-599 - Type: sub - Frequency 7 &#10;&#13; Mutation location: 599-600 - Type: ins - Frequency 5 &#10;&#13; Mutation location: 599-603 - Type: com - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 600-601 - Type: del - Frequency 7 &#10;&#13; Mutation location: 600-600 - Type: sub - Frequency 11915 &#10;&#13; Mutation location: 599-600 - Type: ins - Frequency 5 &#10;&#13; Mutation location: 600-600 - Type: com - Frequency 62 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 601-601 - Type: del - Frequency 1 &#10;&#13; Mutation location: 601-601 - Type: sub - Frequency 52 &#10;&#13; Mutation location: 600-605 - Type: com - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 602-602 - Type: sub - Frequency 1 &#10;&#13; Mutation location: 600-605 - Type: com - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN> <SPAN TITLE="Mutation location: 603-603 - Type: sub - Frequency 4 &#10;&#13; Mutation location: 600-605 - Type: com - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 604-604 - Type: del - Frequency 1 &#10;&#13; Mutation location: 604-604 - Type: sub - Frequency 3 &#10;&#13; Mutation location: 600-605 - Type: com - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 605-605 - Type: sub - Frequency 6 &#10;&#13; Mutation location: 605-605 - Type: com - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">*</FONT></SPAN><SPAN TITLE="Mutation location: 606-606 - Type: sub - Frequency 5 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 607-607 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>  <SPAN TITLE="Mutation location: 608-608 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 609-609 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 610-610 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN> <SPAN TITLE="Mutation location: 611-611 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 612-612 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN> <SPAN TITLE="Mutation location: 614-614 - Type: sub - Frequency 4 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 615-615 - Type: sub - Frequency 2 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 616-616 - Type: sub - Frequency 5 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 617-617 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 618-618 - Type: sub - Frequency 7 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN><SPAN TITLE="Mutation location: 619-619 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>                        
+                                _del_arr&nbsp;::&nbsp;                  <FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT>  <FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT><FONT style="background-color: green" color="black">-</FONT>   <FONT style="background-color: green" color="black">-</FONT>                                          
+                                _sub_arr&nbsp;::&nbsp;       <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT> <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT> <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT> <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT> <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT>  <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT> <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT> <FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT><FONT style="background-color: green" color="black">.</FONT>                        
+                                _ins_arr&nbsp;::&nbsp;                           <FONT style="background-color: green" color="black">+</FONT><FONT style="background-color: green" color="black">+</FONT><FONT style="background-color: green" color="black">+</FONT>                                               
+                                _com_arr&nbsp;::&nbsp;                          <FONT style="background-color: green" color="black">*</FONT> <FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT> <FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT><FONT style="background-color: green" color="black">*</FONT>                                         
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;HRDLKSNNIF LHEDLT.VKI GDFGLATVKS RWSGS..HQF EQLSGSILWM APEVIRMQDK NPYSFQSDVY 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;HRDLKSNNIF LHEDLT.VKI GDFGLATVKS RWSGS..HQF EQLSGSILWM APEVIRMQDK NPYSFQSDVY 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;HRDLKSNNIF LHDDFS.VKI GDFGLATAKV RWSGS..QQS NQPTGSILWM APEVIRMKEQ NPYSFQSDVY 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;HRDLKSNNIF LHEDLT.VKI GDFGLATVKS RWSGS..HQF EQLSGSILWM APEVIRMQDK NPYSFQSDVY 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;HRDLKTNNIF LMDDMSTVKI GDFGLATVKT KWTVNGGQQQ QQPTGSILWM APEVIRMQDD NPYTPQSDVY 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;HRDLKSNNIF LHEDLT.VKI GDFGLATVKS RWSGS..HQF EQLSGSTLWM APEVIRLQDK NPYSFQSDVY 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;HRDLKSNNIF LHEDLS.VKI GDFGLATAKT RWSGE..KQA NQPTGSILWM APEVIRMQEL NPYSFQSDVY 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;HRDLKSNNIF LHEDLT.VKI GDFGLATVKS RWSGS..HQF EQLSGSILWM APEVIRMQDK NPYSFQSDVY 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;HRDLKSNNIF LHEDLT.VKI GDFGLATVKS RWSGS..HQF EQLSGSILWM APEVIRMQDK NPYSFQSDVY 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;HRDLKSNNIF LHEDLT.VKI GDFGLATVKS RWSGS..HQF EQLSGSILWM APEVIRMQDK NPYSFQSDVY 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;771                                                                      840
+                               Consensus&nbsp;::&nbsp;AFGIVLYELM TGQLPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMAECLKKK RDERPLFPQI
+                              Match line&nbsp;::&nbsp;:*** :**:: :  ***.:*. *:***:****  * * ** :: :* : *:::  :   :*:     .:**:*  :
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;AFGIVLYELM TGQLPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMAECLKKK RDERPLFPQI </FONT>
+                               Mutations&nbsp;::&nbsp;                                             <SPAN TITLE="Mutation location: 682-682 - Type: sub - Frequency 1 &#10;&#13; "><FONT style="background-color: red" color="black">.</FONT></SPAN>                               
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                                             <FONT style="background-color: green" color="black">.</FONT>                               
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;AFGIVLYELM TGQLPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMAECLKKK RDERPLFPQI 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;AFGIVLYELM TGQLPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMAECLKKK RDERPLFPQI 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;AFGIVLYEML TEQLPYNHIN NKDQILFMVG CGKLRPDSTK VRTDCPQALK RCVEDCIKFN RDERPLFRLL 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;AFGIVLYELM TGQLPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMAECLKKK RDERPLFPQI 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;SFGICMYEIL SSHLPYSNIN NRDQILFMVG RGYLRPDRSK IRHDTPKSML KLYDNCIMFD RNERPVFGEV 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;AFGIVLYELM SGALPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMADCLKKK REERPLFPQI 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;AFGIVMYELL AECLPYGHIS NKDQILFMVG RGLLRPDMSQ VRSDAPQALK RLAEDCIKYT PKDRPLFRPL 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;AFGIVLYELM TGQLPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMAECLKKK RDERPLFPQI 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;AFGIVLYELM TGQLPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMAECLKKK RDERPLFPQI 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;AFGIVLYELM TGQLPYSNIN NRDQIIFMVG RGYLSPDLSK VRSNCPKAMK RLMAECLKKK RDERPLFPQI 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;841                                                                      910
+                               Consensus&nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT SVMDAVMRSQ MEDFSLYACA SPKTPIQAGG YGEFAAFKNY
+                              Match line&nbsp;::&nbsp;*  :. :    :**: ** *  *.. :   *               .:     :  .*** .              
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT .......... .EDFSLYACA SPKTPIQAGG YGAFPVH... </FONT>
+                               Mutations&nbsp;::&nbsp;                                                                             
+                                _del_arr&nbsp;::&nbsp;                                                                             
+                                _sub_arr&nbsp;::&nbsp;                                                                             
+                                _ins_arr&nbsp;::&nbsp;                                                                             
+                                _com_arr&nbsp;::&nbsp;                                                                             
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT .......... .EDFSLYACA SPKTPIQAGG YGEFAAFK.. 
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT .......... .EDFSLYACA SPKTPIQAGG YGEFAAFK.. 
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;LNMLENMLRT MPKFHRSASE PNFTQTQLQN .......... .DDF.LYMCS SPKTPVNFHN FQFYNGAGNY 
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT .......... .EDFSLYACA SPKTPIQAGG YGTFPVH... 
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;LERLRDII.. LPKLTRSQSA PNVLHLDSQY SVMDAVMRSQ MLSWSYIPPA TAKTPQSAAA AAAANKKAYY 
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT .......... .EDFSLYTCA SPKTPIQAGG YGEFTAFK.. 
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;LNMLENMLRT LPKIHRSASE PNLTQSQLQN .......... .DEF.LYLPS .PKTPVNFNN FQFFGSAGNI 
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT .......... .EDFSLYACA SPKTPIQAGG YGGFPVH... 
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT .......... .EDFSLYACA SPKTPIQAGG YGEFAAFK.. 
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;LASIELLARS LPKIHRSASE PSLNRAGFQT .......... .EDFSLYACA SPKTPIQAGG YGEFAAFK.. 
+
+                                        &nbsp;&nbsp;&nbsp;&nbsp;911                                                                      980
+                               Consensus&nbsp;::&nbsp;NVYGLI
+                              Match line&nbsp;::&nbsp;      
+<FONT color="blue">          00 Human NP 004324.2 9606 braf&nbsp;::&nbsp;......</FONT>
+                               Mutations&nbsp;::&nbsp;      
+                                _del_arr&nbsp;::&nbsp;      
+                                _sub_arr&nbsp;::&nbsp;      
+                                _ins_arr&nbsp;::&nbsp;      
+                                _com_arr&nbsp;::&nbsp;      
+          20 Canis familiaris XP 532749.&nbsp;::&nbsp;......
+          30 Mus musculus NP 647455.2 10&nbsp;::&nbsp;......
+          Anopheles gambiae XP 318144.4 &nbsp;::&nbsp;......
+          Bos taurus XP 869161.2 9913 BR&nbsp;::&nbsp;......
+          Caenorhabditis elegans NP 7414&nbsp;::&nbsp;NVYGLI
+          Danio rerio NP 991307.2 7955 b&nbsp;::&nbsp;......
+          Drosophila melanogaster NP 525&nbsp;::&nbsp;......
+          Gallus gallus NP 990633.1 9031&nbsp;::&nbsp;......
+          Pan troglodytes XP 001155024.1&nbsp;::&nbsp;......
+          Rattus norvegicus XP 231692.4 &nbsp;::&nbsp;......
+
+</PRE>
+   <!--_TRC_ sub alignAndMutation::printAlignmentAndMutation ends.  -->
+<H3><U>LEGENDS</U></H3><BR><FONT face="monospace" color="blue"><FONT style="background-color: red" color="black">-</FONT> = del<BR>
+<FONT style="background-color: red" color="black">.</FONT> = sub<BR>
+<FONT style="background-color: red" color="black">+</FONT> = ins<BR>
+<FONT style="background-color: red" color="black">*</FONT> = com<BR>
+<BR>
+00_Human_NP_004324.2_9606_braf = 00_Human_NP_004324.2_9606_braf/1-766<BR>
+20_Canis_familiaris_XP_532749. = 20_Canis_familiaris_XP_532749./1-767<BR>
+30_Mus_musculus_NP_647455.2_10 = 30_Mus_musculus_NP_647455.2_10/1-804<BR>
+Anopheles_gambiae_XP_318144.4_ = Anopheles_gambiae_XP_318144.4_/1-667<BR>
+Bos_taurus_XP_869161.2_9913_BR = Bos_taurus_XP_869161.2_9913_BR/1-686<BR>
+Caenorhabditis_elegans_NP_7414 = Caenorhabditis_elegans_NP_7414/1-813<BR>
+Danio_rerio_NP_991307.2_7955_b = Danio_rerio_NP_991307.2_7955_b/1-777<BR>
+Drosophila_melanogaster_NP_525 = Drosophila_melanogaster_NP_525/1-739<BR>
+Gallus_gallus_NP_990633.1_9031 = Gallus_gallus_NP_990633.1_9031/1-806<BR>
+Pan_troglodytes_XP_001155024.1 = Pan_troglodytes_XP_001155024.1/1-767<BR>
+<BR></FONT>
+   <!--_TRC_ sub displayAlignAndMutation ends -->
+<HR><HR>
+<HR><HR>
+<HR><HR>
+</HTML>
+   <!--_TRC_ alignmentAndMutation.pm DESTROY reached -->
+   <!--_TRC_ in alignmentAndMutation.pm closeFH -->
